@@ -6,7 +6,7 @@ export function App() {
   const { state, signOut } = useSession();
 
   if (state.status === "loading") {
-    return <main className="p-10 text-sm text-slate-500">Loading…</main>;
+    return <main className="p-10 text-sm text-ink-muted">Loading…</main>;
   }
 
   if (state.status === "anonymous") return <SignIn />;

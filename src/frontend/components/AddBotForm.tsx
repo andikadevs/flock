@@ -5,9 +5,13 @@ import { api, type HandlerInfo } from "../api.ts";
 type AddBotFormProps = {
   handlers: HandlerInfo[];
   onAdded: () => void;
+  onCancel: () => void;
 };
 
-export function AddBotForm({ handlers, onAdded }: AddBotFormProps) {
+const FIELD =
+  "w-full rounded-md border border-line bg-surface px-3 py-2 text-sm text-ink outline-none focus:border-accent";
+
+export function AddBotForm({ handlers, onAdded, onCancel }: AddBotFormProps) {
   const [name, setName] = useState("");
   const [token, setToken] = useState("");
   const [handlerKey, setHandlerKey] = useState(handlers[0]?.key ?? "");
@@ -22,8 +26,6 @@ export function AddBotForm({ handlers, onAdded }: AddBotFormProps) {
 
     try {
       await api.createBot({ name, token, handlerKey, mode });
-      setName("");
-      setToken("");
       onAdded();
     } catch (err) {
       setError((err as Error).message);
@@ -33,29 +35,28 @@ export function AddBotForm({ handlers, onAdded }: AddBotFormProps) {
   };
 
   return (
-    <form onSubmit={submit} className="rounded-xl border border-slate-800 bg-slate-900/60 p-5">
-      <h2 className="mb-4 text-sm font-semibold text-slate-200">Add a bot</h2>
-
+    <form onSubmit={submit} className="rounded-lg border border-line bg-surface p-5">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Field label="Name">
           <input
             value={name}
             onChange={event => setName(event.target.value)}
             required
+            autoFocus
             placeholder="Support bot"
-            className={INPUT}
+            className={FIELD}
           />
         </Field>
 
-        <Field label="Token" hint="Stored encrypted; never shown again.">
+        <Field label="Token" hint="Stored encrypted, never shown again.">
           <input
             value={token}
             onChange={event => setToken(event.target.value)}
             required
             type="password"
             autoComplete="off"
-            placeholder="123456789:AA..."
-            className={INPUT}
+            placeholder="123456789:AA…"
+            className={FIELD}
           />
         </Field>
 
@@ -63,7 +64,7 @@ export function AddBotForm({ handlers, onAdded }: AddBotFormProps) {
           <select
             value={handlerKey}
             onChange={event => setHandlerKey(event.target.value)}
-            className={INPUT}
+            className={FIELD}
           >
             {handlers.map(handler => (
               <option key={handler.key} value={handler.key}>
@@ -77,7 +78,7 @@ export function AddBotForm({ handlers, onAdded }: AddBotFormProps) {
           <select
             value={mode}
             onChange={event => setMode(event.target.value as BotMode)}
-            className={INPUT}
+            className={FIELD}
           >
             <option value="polling">Long polling</option>
             <option value="webhook">Webhook</option>
@@ -85,21 +86,27 @@ export function AddBotForm({ handlers, onAdded }: AddBotFormProps) {
         </Field>
       </div>
 
-      {error && <p className="mt-4 text-sm text-rose-400">{error}</p>}
+      {error && <p className="mt-4 text-sm text-rose-600">{error}</p>}
 
-      <button
-        type="submit"
-        disabled={saving || handlers.length === 0}
-        className="mt-4 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-slate-950 transition hover:bg-emerald-400 disabled:opacity-50"
-      >
-        {saving ? "Checking token…" : "Add bot"}
-      </button>
+      <div className="mt-5 flex items-center gap-2">
+        <button
+          type="submit"
+          disabled={saving || handlers.length === 0}
+          className="rounded-md bg-accent px-3.5 py-2 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-40"
+        >
+          {saving ? "Checking token…" : "Add bot"}
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="rounded-md px-3.5 py-2 text-sm text-ink-muted transition hover:text-ink"
+        >
+          Cancel
+        </button>
+      </div>
     </form>
   );
 }
-
-const INPUT =
-  "w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-emerald-500";
 
 function Field({
   label,
@@ -112,9 +119,9 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-xs font-medium text-slate-400">{label}</span>
+      <span className="mb-1.5 block text-xs font-medium text-ink-muted">{label}</span>
       {children}
-      {hint && <span className="mt-1 block text-xs text-slate-500">{hint}</span>}
+      {hint && <span className="mt-1 block text-xs text-ink-muted">{hint}</span>}
     </label>
   );
 }

@@ -7,26 +7,26 @@ type BotTableProps = {
   onInspect: (bot: BotView) => void;
 };
 
-const COLUMNS = ["Bot", "Status", "Uptime", "Traffic", "Errors", ""];
+const COLUMNS = ["Bot", "Status", "Uptime", "Updates", "Errors", ""];
 
 export function BotTable({ bots, onChanged, onInspect }: BotTableProps) {
   if (bots.length === 0) {
     return (
-      <p className="rounded-xl border border-dashed border-slate-800 p-10 text-center text-sm text-slate-500">
-        No bots yet. Add one above to get started.
-      </p>
+      <div className="rounded-lg border border-dashed border-line py-16 text-center">
+        <p className="text-sm text-ink-muted">No bots yet.</p>
+      </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/60 px-5">
+    <div className="overflow-x-auto rounded-lg border border-line bg-surface px-5">
       <table className="w-full min-w-3xl text-left">
         <thead>
-          <tr className="border-b border-slate-800">
+          <tr>
             {COLUMNS.map((column, index) => (
               <th
                 key={column || index}
-                className={`py-3 text-xs font-medium tracking-wide text-slate-500 uppercase ${
+                className={`py-3 text-xs font-medium text-ink-muted ${
                   index === COLUMNS.length - 1 ? "text-right" : ""
                 }`}
               >
