@@ -1,6 +1,6 @@
 /**
  * Environment configuration for the control plane (parent process only).
- * Child bot processes receive everything they need over IPC and never read env.
+ * Bot runner processes receive everything they need over IPC and never read env.
  */
 
 function required(key: string): string {
@@ -13,13 +13,22 @@ function required(key: string): string {
   return value;
 }
 
-function parseKey(hex: string): Buffer {
-  const key = Buffer.from(hex, "hex");
+function encryptionKey(): Buffer {
+  const key = Buffer.from(required("TOKEN_ENCRYPTION_KEY"), "hex");
   if (key.length !== 32) {
     throw new Error("TOKEN_ENCRYPTION_KEY must be 64 hex characters (32 bytes).");
   }
   return key;
 }
+
+function commaList(key: string): string[] {
+  return (process.env[key] ?? "")
+    .split(",")
+    .map(entry => entry.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+const appUrl = (process.env.APP_URL ?? "http://localhost:3000").replace(/\/+$/, "");
 
 export const config = {
   databaseUrl:
@@ -27,13 +36,25 @@ export const config = {
     "postgres://postgres:postgres@127.0.0.1:5432/telegram_manager",
   port: Number(process.env.PORT ?? 3000),
 
+  /** Where a browser reaches this dashboard. Used to build the OIDC redirect URI. */
+  appUrl,
+
   /** Public https origin Telegram can reach. Required only for webhook-mode bots. */
   publicUrl: (process.env.PUBLIC_URL ?? "").replace(/\/+$/, ""),
 
-  tokenKey: parseKey(required("TOKEN_ENCRYPTION_KEY")),
+  tokenKey: encryptionKey(),
 
-  adminUser: process.env.ADMIN_USER ?? "admin",
-  adminPasswordHash: required("ADMIN_PASSWORD_HASH"),
+  oidc: {
+    issuer: (process.env.OIDC_ISSUER ?? "").replace(/\/+$/, ""),
+    clientId: process.env.OIDC_CLIENT_ID ?? "",
+    clientSecret: process.env.OIDC_CLIENT_SECRET ?? "",
+    scope: process.env.OIDC_SCOPE ?? "openid email profile",
+    redirectUri: `${appUrl}/auth/callback`,
+  },
+
+  /** Deny by default: an empty allowlist admits nobody, rather than everybody. */
+  adminEmails: commaList("ADMIN_EMAILS"),
+  adminSubjects: commaList("ADMIN_SUBJECTS"),
 
   sessionTtlMs: 1000 * 60 * 60 * 12,
   isProduction: process.env.NODE_ENV === "production",
@@ -46,4 +67,13 @@ export function webhookUrl(botId: string): string {
     );
   }
   return `${config.publicUrl}/tg/${botId}`;
+}
+
+export function assertOidcConfigured(): void {
+  const missing = (["issuer", "clientId", "clientSecret"] as const).filter(
+    key => !config.oidc[key],
+  );
+  if (missing.length > 0) {
+    throw new Error(`OIDC is not configured. Missing: ${missing.join(", ")}.`);
+  }
 }
