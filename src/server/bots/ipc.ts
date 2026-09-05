@@ -6,6 +6,7 @@ import type { BotMetrics, BotMode } from "./types.ts";
 export type ParentMessage =
   | { type: "init"; token: string; handlerKey: string; mode: BotMode }
   | { type: "update"; update: Update }
+  | { type: "ping" }
   | { type: "shutdown" };
 
 export type ChildMessage =
@@ -18,3 +19,10 @@ export const HEARTBEAT_INTERVAL_MS = 5_000;
 
 /** Three missed heartbeats: the runner is wedged, not merely busy. */
 export const HEARTBEAT_TIMEOUT_MS = HEARTBEAT_INTERVAL_MS * 4;
+
+/**
+ * A runner whose parent has stopped pinging is an orphan. It must exit on its own:
+ * Telegram allows one getUpdates consumer per token, so a forgotten runner would
+ * fight the next one with 409 Conflict forever.
+ */
+export const PARENT_TIMEOUT_MS = HEARTBEAT_INTERVAL_MS * 4;

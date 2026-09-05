@@ -95,6 +95,15 @@ export async function setStatus(id: string, status: BotStatus): Promise<void> {
   await sql`UPDATE bots SET status = ${status} WHERE id = ${id}`;
 }
 
+/** A healthy start clears the previous failure, so stale errors do not linger. */
+export async function markRunning(id: string): Promise<void> {
+  await sql`
+    UPDATE bots
+    SET status = 'running', last_error = NULL, last_error_at = NULL
+    WHERE id = ${id}
+  `;
+}
+
 export async function setFailure(id: string, status: BotStatus, error: string): Promise<void> {
   await sql`
     UPDATE bots

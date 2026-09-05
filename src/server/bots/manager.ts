@@ -32,11 +32,13 @@ export class BotManager {
 
   async start(): Promise<void> {
     await this.reconcile();
-    this.sweeper = setInterval(() => this.killStaleProcesses(), STALE_SWEEP_INTERVAL_MS);
+    // Idempotent: a hot reload re-runs this against the same long-lived manager.
+    this.sweeper ??= setInterval(() => this.killStaleProcesses(), STALE_SWEEP_INTERVAL_MS);
   }
 
   async stop(): Promise<void> {
     if (this.sweeper) clearInterval(this.sweeper);
+    this.sweeper = null;
     for (const timer of this.pendingRestarts.values()) clearTimeout(timer);
     this.pendingRestarts.clear();
     await Promise.all([...this.processes.keys()].map(botId => this.stopBot(botId)));
@@ -179,7 +181,7 @@ export class BotManager {
 
   private async onReady(botId: string, username: string | null): Promise<void> {
     await bots.setUsername(botId, username);
-    await bots.setStatus(botId, "running");
+    await bots.markRunning(botId);
     await events.record(botId, "info", "Runner started.");
     this.onChange();
   }

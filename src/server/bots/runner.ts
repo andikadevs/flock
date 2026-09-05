@@ -9,7 +9,12 @@
 
 import { Bot } from "grammy";
 import { handlers } from "./handlers/index.ts";
-import { HEARTBEAT_INTERVAL_MS, type ChildMessage, type ParentMessage } from "./ipc.ts";
+import {
+  HEARTBEAT_INTERVAL_MS,
+  PARENT_TIMEOUT_MS,
+  type ChildMessage,
+  type ParentMessage,
+} from "./ipc.ts";
 import { emptyMetrics, type BotMode } from "./types.ts";
 
 const INIT_TIMEOUT_MS = 15_000;
@@ -17,6 +22,7 @@ const INIT_TIMEOUT_MS = 15_000;
 const metrics = emptyMetrics();
 let bot: Bot | null = null;
 let heartbeat: ReturnType<typeof setInterval> | null = null;
+let lastParentPingAt = Date.now();
 let stopping = false;
 
 function send(message: ChildMessage): void {
@@ -29,6 +35,8 @@ function recordError(message: string): void {
 }
 
 function abort(message: string): void {
+  // A shutdown in progress unwinds the bot on purpose; that is not a failure.
+  if (stopping) return;
   recordError(message);
   send({ type: "error", message, fatal: true });
   void stop(1);
@@ -68,6 +76,7 @@ async function connect(instance: Bot, mode: BotMode): Promise<void> {
   }
 
   // Long polling resolves only once the bot stops, so it is deliberately not awaited.
+  // Stopping rejects this promise by design, which `abort` ignores while shutting down.
   void instance
     .start({
       drop_pending_updates: true,
@@ -88,7 +97,15 @@ async function start(init: Extract<ParentMessage, { type: "init" }>): Promise<vo
   }
 
   bot = instance;
-  heartbeat = setInterval(() => send({ type: "heartbeat", metrics }), HEARTBEAT_INTERVAL_MS);
+  lastParentPingAt = Date.now();
+  heartbeat = setInterval(() => {
+    if (Date.now() - lastParentPingAt > PARENT_TIMEOUT_MS) {
+      // The manager is gone. Exiting frees the token for whoever supervises next.
+      void stop(0);
+      return;
+    }
+    send({ type: "heartbeat", metrics });
+  }, HEARTBEAT_INTERVAL_MS);
 }
 
 function handleUpdate(message: Extract<ParentMessage, { type: "update" }>): void {
@@ -116,6 +133,9 @@ process.on("message", (message: ParentMessage) => {
       break;
     case "update":
       handleUpdate(message);
+      break;
+    case "ping":
+      lastParentPingAt = Date.now();
       break;
     case "shutdown":
       void stop(0);

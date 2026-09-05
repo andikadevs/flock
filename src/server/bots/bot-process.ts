@@ -5,7 +5,7 @@
 
 import type { Subprocess } from "bun";
 import type { Update } from "grammy/types";
-import type { ChildMessage, ParentMessage } from "./ipc.ts";
+import { HEARTBEAT_INTERVAL_MS, type ChildMessage, type ParentMessage } from "./ipc.ts";
 import { emptyMetrics, type BotMetrics, type BotMode } from "./types.ts";
 
 const RUNNER_PATH = new URL("./runner.ts", import.meta.url).pathname;
@@ -33,6 +33,7 @@ export class BotProcess {
   readonly startedAt = Date.now();
 
   private readonly process: Subprocess;
+  private readonly liveness: ReturnType<typeof setInterval>;
   private metricsSnapshot = emptyMetrics();
   private lastSeenAt = Date.now();
   private username: string | null = null;
@@ -58,7 +59,11 @@ export class BotProcess {
       mode: spec.mode,
     });
 
+    // Tells the runner the manager is still here; without it the runner exits.
+    this.liveness = setInterval(() => this.send({ type: "ping" }), HEARTBEAT_INTERVAL_MS);
+
     void this.process.exited.then(code => {
+      clearInterval(this.liveness);
       if (!this.stopping) listener.onExit(code, this.uptimeMs);
     });
   }
@@ -92,6 +97,7 @@ export class BotProcess {
   /** Ask the runner to drain and exit, then force it if it will not. */
   async stop(): Promise<void> {
     this.stopping = true;
+    clearInterval(this.liveness);
     this.send({ type: "shutdown" });
 
     const outcome = await Promise.race([
@@ -102,6 +108,7 @@ export class BotProcess {
   }
 
   kill(): void {
+    clearInterval(this.liveness);
     this.process.kill();
   }
 

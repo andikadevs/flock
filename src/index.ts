@@ -17,10 +17,25 @@ import dashboard from "./index.html";
 
 const HOUSEKEEPING_INTERVAL_MS = 60 * 60 * 1000;
 
+type HotState = {
+  manager?: BotManager;
+  live?: LiveChannel;
+  housekeeping?: ReturnType<typeof setInterval>;
+};
+
+/**
+ * `bun --hot` re-evaluates this module without restarting the process, so the
+ * manager is kept across reloads. A fresh one each time would supervise a second
+ * set of runners while the first kept running, and Telegram allows only one
+ * getUpdates consumer per token.
+ */
+const hot = (import.meta.hot?.data ?? {}) as HotState;
+
 await migrate();
 
-const manager = new BotManager();
-const live = new LiveChannel(manager);
+const manager = (hot.manager ??= new BotManager());
+const live = (hot.live ??= new LiveChannel(manager));
+
 manager.onChange = () => void live.push();
 await manager.start();
 
@@ -43,13 +58,14 @@ const server = Bun.serve({
 
 live.attach(server);
 
-const housekeeping = setInterval(() => {
+if (hot.housekeeping) clearInterval(hot.housekeeping);
+hot.housekeeping = setInterval(() => {
   void events.prune();
   void sessions.pruneExpired();
 }, HOUSEKEEPING_INTERVAL_MS);
 
 async function shutdown(): Promise<void> {
-  clearInterval(housekeeping);
+  if (hot.housekeeping) clearInterval(hot.housekeeping);
   live.stop();
   await manager.stop();
   await server.stop();
