@@ -1,29 +1,24 @@
 /**
- * Handler registry. Behaviour lives in code and is chosen by key; the database
- * stores which handler a bot uses, never anything executable.
+ * The registry: the one place that knows every bot type. Bots are chosen by key
+ * from the dashboard, so the database stores a name, never anything executable.
+ *
+ * Each bot owns a folder and everything inside it. Bots never import one another;
+ * anything genuinely common lives in `shared/` and is imported explicitly.
  */
 
-import type { Bot } from "grammy";
-import { register as echo } from "./echo.ts";
-import { register as ping } from "./ping.ts";
+import { handler as echo } from "./echo/index.ts";
+import { handler as faq } from "./faq/index.ts";
+import { handler as feedback } from "./feedback/index.ts";
+import { handler as ping } from "./ping/index.ts";
+import type { Handler } from "./types.ts";
 
-export type Handler = {
-  label: string;
-  description: string;
-  register: (bot: Bot) => void;
-};
+export type { Handler };
 
 export const handlers: Record<string, Handler> = {
-  echo: {
-    label: "Echo",
-    description: "Replies with whatever text it receives.",
-    register: echo,
-  },
-  ping: {
-    label: "Ping",
-    description: "Answers /ping with a timestamp.",
-    register: ping,
-  },
+  echo,
+  ping,
+  faq,
+  feedback,
 };
 
 export function isHandlerKey(key: string): boolean {
