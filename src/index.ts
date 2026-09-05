@@ -17,24 +17,38 @@ import dashboard from "./index.html";
 
 const HOUSEKEEPING_INTERVAL_MS = 60 * 60 * 1000;
 
-type HotState = {
-  manager?: BotManager;
-  live?: LiveChannel;
-  housekeeping?: ReturnType<typeof setInterval>;
+type ControlPlane = {
+  manager: BotManager;
+  live: LiveChannel;
+  housekeeping: ReturnType<typeof setInterval>;
 };
 
 /**
- * `bun --hot` re-evaluates this module without restarting the process, so the
- * manager is kept across reloads. A fresh one each time would supervise a second
- * set of runners while the first kept running, and Telegram allows only one
- * getUpdates consumer per token.
+ * `bun --hot` re-evaluates this module inside the same process. A fresh manager per
+ * reload would supervise a second set of runners while the first kept polling, and
+ * Telegram allows one getUpdates consumer per token, so the two would fight with
+ * 409 Conflict until both gave up.
+ *
+ * The fleet is therefore anchored on `globalThis`, which survives re-evaluation.
+ * `import.meta.hot` is not available in Bun's server runtime and cannot be used.
  */
-const hot = (import.meta.hot?.data ?? {}) as HotState;
+const store = globalThis as unknown as { __controlPlane?: ControlPlane };
+
+function createControlPlane(): ControlPlane {
+  const manager = new BotManager();
+  return {
+    manager,
+    live: new LiveChannel(manager),
+    housekeeping: setInterval(() => {
+      void events.prune();
+      void sessions.pruneExpired();
+    }, HOUSEKEEPING_INTERVAL_MS),
+  };
+}
 
 await migrate();
 
-const manager = (hot.manager ??= new BotManager());
-const live = (hot.live ??= new LiveChannel(manager));
+const { manager, live } = (store.__controlPlane ??= createControlPlane());
 
 manager.onChange = () => void live.push();
 await manager.start();
@@ -58,14 +72,8 @@ const server = Bun.serve({
 
 live.attach(server);
 
-if (hot.housekeeping) clearInterval(hot.housekeeping);
-hot.housekeeping = setInterval(() => {
-  void events.prune();
-  void sessions.pruneExpired();
-}, HOUSEKEEPING_INTERVAL_MS);
-
 async function shutdown(): Promise<void> {
-  if (hot.housekeeping) clearInterval(hot.housekeeping);
+  clearInterval(store.__controlPlane!.housekeeping);
   live.stop();
   await manager.stop();
   await server.stop();
