@@ -18,18 +18,20 @@ export function Toggle({ checked, busy = false, label, onChange }: ToggleProps) 
       className="group inline-flex items-center gap-2 disabled:opacity-40"
     >
       <span
-        className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${
+        className={`relative block h-5 w-9 shrink-0 rounded-full transition-colors ${
           checked ? "bg-emerald-500" : "bg-neutral-300 group-hover:bg-neutral-400"
         }`}
       >
         <span
-          className={`absolute top-0.5 size-4 rounded-full bg-white shadow-sm transition-transform ${
+          className={`absolute top-0.5 block size-4 rounded-full bg-white shadow-sm transition-transform ${
             checked ? "translate-x-4.5" : "translate-x-0.5"
           }`}
         />
       </span>
       <span
-        className={`w-6 text-left text-sm ${checked ? "text-ink" : "text-ink-muted"}`}
+        className={`w-7 text-left text-sm whitespace-nowrap ${
+          checked ? "text-ink" : "text-ink-muted"
+        }`}
       >
         {checked ? "On" : "Off"}
       </span>
