@@ -23,8 +23,13 @@ const failure = (reason: string): Response =>
 export function authRoutes() {
   const begin = async (): Promise<Response> => {
     const challenge = createChallenge();
-    const url = await authorizationUrl(challenge);
-    return redirect(url, [transaction.beginCookie(challenge)]);
+    try {
+      const url = await authorizationUrl(challenge);
+      return redirect(url, [transaction.beginCookie(challenge)]);
+    } catch (err) {
+      // Misconfiguration, not a failed login: say so plainly instead of throwing.
+      return new Response(`Sign-in is unavailable: ${(err as Error).message}`, { status: 503 });
+    }
   };
 
   const callback = async (req: BunRequest): Promise<Response> => {
