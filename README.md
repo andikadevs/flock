@@ -4,6 +4,9 @@
 
 # Flock
 
+[![CI](https://github.com/andikadevs/flock/actions/workflows/ci.yml/badge.svg)](https://github.com/andikadevs/flock/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
+
 Run a flock of Telegram bots from one dashboard: add a bot, pick its behaviour,
 switch it on or off, and watch what it is doing.
 
@@ -44,6 +47,16 @@ No database server is needed. State lives in a single SQLite file
 | `bun start` | Production server. |
 | `bun run build` | Bundles the dashboard into `dist/`. |
 | `bun test` | Unit tests, against an in-memory database. |
+
+### Docker
+
+```bash
+cp .env.example .env   # fill in TOKEN_ENCRYPTION_KEY and the OIDC settings
+docker compose up -d
+```
+
+The database lives on the `flock-data` volume at `/app/data/flock.sqlite`, and the
+container runs as the unprivileged `bun` user.
 
 ### Environment
 
@@ -188,3 +201,13 @@ the handler its own per-bot configuration rather than forking the folder.
 
 Telegram permits one mechanism per token, so the manager always tears the unused
 one down before a runner starts consuming.
+
+## Contributing
+
+Issues and pull requests are welcome. Read [CONTRIBUTING.md](./CONTRIBUTING.md) first,
+and report security problems privately as described in [SECURITY.md](./SECURITY.md).
+Notable changes are listed in [CHANGELOG.md](./CHANGELOG.md).
+
+## License
+
+[MIT](./LICENSE) © Andika Dwi Saputra

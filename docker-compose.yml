@@ -1,0 +1,13 @@
+services:
+  flock:
+    build: .
+    image: flock
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "3000:3000"
+    volumes:
+      - flock-data:/app/data
+
+volumes:
+  flock-data:
