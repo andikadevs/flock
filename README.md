@@ -15,30 +15,37 @@ parent (Bun.serve)                   runner process (one per enabled bot)
 ├─ dashboard + /api/*                ├─ grammy bot
 ├─ POST /tg/:botId  ──── IPC ───▶    ├─ handler from the code registry
 ├─ manager: spawn, restart, stop     └─ heartbeat + metrics ──── IPC ───▶ parent
-├─ postgres: bots, events, audit
+├─ sqlite (bun:sqlite): bots, events, audit, sessions
 └─ websocket: live status feed
 ```
 
-`bots.enabled` in Postgres is the desired state, the manager's process table is
+`bots.enabled` in the database is the desired state, the manager's process table is
 the actual state, and `reconcile()` is the only thing that closes the gap.
 
 ## Setup
 
 ```bash
 bun install
-createdb telegram_manager          # or: psql -U postgres -c 'CREATE DATABASE telegram_manager'
 cp .env.example .env
 openssl rand -hex 32               # paste into TOKEN_ENCRYPTION_KEY
 bun dev
 ```
 
-Tables are created on first boot.
+No database server is needed. State lives in a single SQLite file
+(`data/telegram-manager.sqlite` by default), created with its tables on first boot.
+
+| Command | What it does |
+| --- | --- |
+| `bun dev` | Dev server with hot reload. |
+| `bun start` | Production server. |
+| `bun run build` | Bundles the dashboard into `dist/`. |
+| `bun test` | Unit tests, against an in-memory database. |
 
 ### Environment
 
 | Variable | Purpose |
 | --- | --- |
-| `DATABASE_URL` | Postgres connection string. |
+| `DATABASE_PATH` | SQLite file path. Defaults to `data/telegram-manager.sqlite`. |
 | `APP_URL` | Where a browser reaches the dashboard. Builds the OIDC redirect URI. |
 | `PUBLIC_URL` | Public HTTPS origin Telegram can reach. Required only for webhook-mode bots. |
 | `TOKEN_ENCRYPTION_KEY` | 64 hex characters. Bot tokens are encrypted at rest with it. |
@@ -64,6 +71,51 @@ and copy the issuer URL, client ID and secret into `.env`.
 token, so a self-registered account cannot claim an admin's address. Providers that never
 send that claim (Microsoft Entra ID, for example) should list admins in `ADMIN_SUBJECTS`
 instead, using the `sub` value the provider issues.
+
+### Data
+
+The database runs in WAL mode with foreign keys enforced, and all tables are
+`STRICT`. Timestamps are stored as ISO-8601 UTC text. To back it up while the app
+is running, use SQLite's online backup rather than copying the file, since recent
+writes may still sit in the `-wal` sidecar:
+
+```bash
+sqlite3 data/telegram-manager.sqlite ".backup backup.sqlite"
+```
+
+Bot tokens are encrypted with `TOKEN_ENCRYPTION_KEY` before they are stored, so a
+leaked database file does not leak tokens, and losing the key makes them unreadable.
+
+## Dashboard
+
+The dashboard is React, bundled by Bun's HTML imports, built from
+[shadcn/ui](https://ui.shadcn.com) components on [Base UI](https://base-ui.com)
+and styled with Tailwind CSS. Code is grouped by feature, and every file and
+folder name is kebab-case:
+
+```
+src/frontend/
+  main.tsx, app.tsx     entry point and top-level screen switch
+  lib/                  http (the only fetch), formatting, small utilities
+  components/ui/        shadcn components, generated and then owned here
+  features/
+    auth/               session, sign-in page
+    bots/               bot list, add/delete dialogs, live feed hook
+    bot-events/         per-bot event log sheet
+    dashboard/          page layout, header, fleet summary
+    theme/              light/dark toggle
+```
+
+Each feature keeps its own `api.ts` (endpoints), hooks (data), and components
+(presentation). Components never call `fetch` directly.
+
+Add more shadcn components with `bunx shadcn@latest add <name>`. The CLI writes
+`import { cn } from "cn"` in this project, so change that to
+`@/frontend/lib/utils` and remove the `cn` package it adds.
+
+The theme follows the OS preference until the user picks one with the toggle, and
+the choice is remembered. Light mode uses Telegram blue on a cool slate frame; dark
+mode uses Telegram's "Night Blue" palette.
 
 ## Adding a bot type
 
