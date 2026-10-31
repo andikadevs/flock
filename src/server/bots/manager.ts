@@ -46,7 +46,7 @@ export class BotManager {
 
   /** Start everything that should run, stop everything that should not. */
   async reconcile(): Promise<void> {
-    const records = await bots.list();
+    const records = bots.list();
     const shouldRun = new Set(records.filter(record => record.enabled).map(record => record.id));
 
     for (const botId of [...this.processes.keys()]) {
@@ -63,7 +63,7 @@ export class BotManager {
   /** Restart a single bot in place, e.g. after its token or handler changed. */
   async restart(botId: string): Promise<void> {
     await this.stopBot(botId);
-    const record = await bots.find(botId);
+    const record = bots.find(botId);
     if (record?.enabled) await this.startBot(record);
     this.onChange();
   }
@@ -78,9 +78,8 @@ export class BotManager {
     return process.deliver(update) ? { ok: true } : { ok: false, reason: "not-running" };
   }
 
-  async snapshot(): Promise<BotView[]> {
-    const records = await bots.list();
-    return records.map(record => this.toView(record));
+  snapshot(): BotView[] {
+    return bots.list().map(record => this.toView(record));
   }
 
   private toView(record: BotRecord): BotView {
@@ -109,18 +108,18 @@ export class BotManager {
     try {
       token = decryptToken(record.tokenEnc);
     } catch {
-      await this.disable(record.id, "Stored token could not be decrypted. Re-enter it.");
+      this.disable(record.id, "Stored token could not be decrypted. Re-enter it.");
       return;
     }
 
     try {
       await this.registerDelivery(record, token);
     } catch (err) {
-      await this.onFailure(record.id, `Telegram rejected setup: ${(err as Error).message}`, 0);
+      this.onFailure(record.id, `Telegram rejected setup: ${(err as Error).message}`, 0);
       return;
     }
 
-    await bots.setStatus(record.id, "starting");
+    bots.setStatus(record.id, "starting");
 
     this.processes.set(
       record.id,
@@ -133,11 +132,11 @@ export class BotManager {
           webhookSecret: record.webhookSecret,
         },
         {
-          onReady: username => void this.onReady(record.id, username),
-          onError: message => void this.onRunnerError(record.id, message),
-          onLog: (level, message) => void events.record(record.id, level, message),
+          onReady: username => this.onReady(record.id, username),
+          onError: message => this.onRunnerError(record.id, message),
+          onLog: (level, message) => events.record(record.id, level, message),
           onExit: (code, uptimeMs) =>
-            void this.onFailure(record.id, `Runner exited with code ${code}.`, uptimeMs),
+            this.onFailure(record.id, `Runner exited with code ${code}.`, uptimeMs),
         },
       ),
     );
@@ -154,7 +153,7 @@ export class BotManager {
       if (process.mode === "webhook") await this.unregisterDelivery(botId);
     }
 
-    await bots.setStatus(botId, "stopped");
+    bots.setStatus(botId, "stopped");
   }
 
   /**
@@ -170,7 +169,7 @@ export class BotManager {
   }
 
   private async unregisterDelivery(botId: string): Promise<void> {
-    const record = await bots.find(botId);
+    const record = bots.find(botId);
     if (!record) return;
     try {
       await telegram.disableWebhook(decryptToken(record.tokenEnc));
@@ -179,31 +178,31 @@ export class BotManager {
     }
   }
 
-  private async onReady(botId: string, username: string | null): Promise<void> {
-    await bots.setUsername(botId, username);
-    await bots.markRunning(botId);
-    await events.record(botId, "info", "Runner started.");
+  private onReady(botId: string, username: string | null): void {
+    bots.setUsername(botId, username);
+    bots.markRunning(botId);
+    events.record(botId, "info", "Runner started.");
     this.onChange();
   }
 
-  private async onRunnerError(botId: string, message: string): Promise<void> {
-    await events.record(botId, "error", message);
-    await bots.setFailure(botId, this.processes.has(botId) ? "running" : "error", message);
+  private onRunnerError(botId: string, message: string): void {
+    events.record(botId, "error", message);
+    bots.setFailure(botId, this.processes.has(botId) ? "running" : "error", message);
     this.onChange();
   }
 
   /** Retry with backoff, then disable, so a bad token cannot spawn-loop forever. */
-  private async onFailure(botId: string, reason: string, uptimeMs: number): Promise<void> {
+  private onFailure(botId: string, reason: string, uptimeMs: number): void {
     this.processes.delete(botId);
-    await events.record(botId, "error", reason);
+    events.record(botId, "error", reason);
 
     const decision = this.policy.onCrash(botId, uptimeMs);
     if (decision.action === "give-up") {
-      await this.disable(botId, `${reason} Gave up after ${decision.attempts} restarts.`);
+      this.disable(botId, `${reason} Gave up after ${decision.attempts} restarts.`);
       return;
     }
 
-    await bots.setFailure(botId, "starting", reason);
+    bots.setFailure(botId, "starting", reason);
     this.onChange();
     this.scheduleRestart(botId, decision.delayMs);
   }
@@ -212,9 +211,8 @@ export class BotManager {
     this.cancelPendingRestart(botId);
     const timer = setTimeout(() => {
       this.pendingRestarts.delete(botId);
-      void bots.find(botId).then(record => {
-        if (record?.enabled) return this.startBot(record);
-      });
+      const record = bots.find(botId);
+      if (record?.enabled) void this.startBot(record);
     }, delayMs);
     this.pendingRestarts.set(botId, timer);
   }
@@ -226,19 +224,19 @@ export class BotManager {
   }
 
   /** Desired state must never stay `true` for something we refuse to run. */
-  private async disable(botId: string, reason: string): Promise<void> {
+  private disable(botId: string, reason: string): void {
     this.cancelPendingRestart(botId);
     this.policy.clear(botId);
-    await bots.setEnabled(botId, false);
-    await bots.setFailure(botId, "error", reason);
-    await events.record(botId, "error", reason);
+    bots.setEnabled(botId, false);
+    bots.setFailure(botId, "error", reason);
+    events.record(botId, "error", reason);
     this.onChange();
   }
 
   private killStaleProcesses(): void {
     for (const process of this.processes.values()) {
       if (!process.isStale(HEARTBEAT_TIMEOUT_MS)) continue;
-      void events.record(process.botId, "warn", "Heartbeat timed out; restarting runner.");
+      events.record(process.botId, "warn", "Heartbeat timed out; restarting runner.");
       process.kill();
     }
   }

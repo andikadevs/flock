@@ -31,9 +31,8 @@ function commaList(key: string): string[] {
 const appUrl = (process.env.APP_URL ?? "http://localhost:3000").replace(/\/+$/, "");
 
 export const config = {
-  databaseUrl:
-    process.env.DATABASE_URL ??
-    "postgres://postgres:postgres@127.0.0.1:5432/telegram_manager",
+  /** SQLite file, created on first boot. `:memory:` keeps everything in RAM (tests). */
+  databasePath: process.env.DATABASE_PATH || "data/telegram-manager.sqlite",
   port: Number(process.env.PORT ?? 3000),
 
   /** Where a browser reaches this dashboard. Used to build the OIDC redirect URI. */

@@ -16,20 +16,20 @@ export type Session = { id: string; actor: string };
 /** Session lookup needs cookies and nothing else. */
 type CookieCarrier = Pick<BunRequest, "cookies">;
 
-export async function createSession(actor: string): Promise<Session> {
+export function createSession(actor: string): Session {
   const id = randomSecret();
-  await sessions.create(id, actor, new Date(Date.now() + config.sessionTtlMs));
+  sessions.create(id, actor, new Date(Date.now() + config.sessionTtlMs));
   return { id, actor };
 }
 
-export async function currentSession(req: CookieCarrier): Promise<Session | null> {
+export function currentSession(req: CookieCarrier): Session | null {
   const id = req.cookies.get(COOKIE_NAME);
-  return id ? await sessions.findValid(id) : null;
+  return id ? sessions.findValid(id) : null;
 }
 
-export async function signOut(req: CookieCarrier): Promise<void> {
+export function signOut(req: CookieCarrier): void {
   const id = req.cookies.get(COOKIE_NAME);
-  if (id) await sessions.remove(id);
+  if (id) sessions.remove(id);
 }
 
 export function sessionCookie(sessionId: string): string {
@@ -60,7 +60,7 @@ export type AuthedHandler<Path extends string> = (
 /** Wraps a handler so it only ever sees authenticated requests. */
 export function authenticated<Path extends string>(handler: AuthedHandler<Path>) {
   return async (req: BunRequest<Path>): Promise<Response> => {
-    const session = await currentSession(req);
+    const session = currentSession(req);
     return session ? await handler(req, session) : unauthorized();
   };
 }

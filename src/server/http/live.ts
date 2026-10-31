@@ -24,11 +24,8 @@ export class LiveChannel {
   }
 
   /** Route handler: upgrade an authenticated request, reject anything else. */
-  upgrade = async (
-    req: BunRequest,
-    server: Server<LiveSocketData>,
-  ): Promise<Response | undefined> => {
-    const session = await currentSession(req);
+  upgrade = (req: BunRequest, server: Server<LiveSocketData>): Response | undefined => {
+    const session = currentSession(req);
     if (!session) return new Response("Unauthorized", { status: 401 });
 
     const data: LiveSocketData = { actor: session.actor };
@@ -41,7 +38,7 @@ export class LiveChannel {
       ws.subscribe(TOPIC);
       this.subscribers += 1;
       this.startTicking();
-      void this.push();
+      this.push();
     },
     close: (ws: ServerWebSocket<LiveSocketData>) => {
       ws.unsubscribe(TOPIC);
@@ -53,9 +50,9 @@ export class LiveChannel {
     },
   };
 
-  async push(): Promise<void> {
+  push(): void {
     if (!this.server || this.subscribers === 0) return;
-    const bots = await this.manager.snapshot();
+    const bots = this.manager.snapshot();
     this.server.publish(TOPIC, JSON.stringify({ type: "bots", bots }));
   }
 
@@ -65,7 +62,7 @@ export class LiveChannel {
 
   private startTicking(): void {
     if (this.ticker) return;
-    this.ticker = setInterval(() => void this.push(), TICK_MS);
+    this.ticker = setInterval(() => this.push(), TICK_MS);
   }
 
   private stopTicking(): void {

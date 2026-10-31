@@ -40,17 +40,17 @@ function createControlPlane(): ControlPlane {
     manager,
     live: new LiveChannel(manager),
     housekeeping: setInterval(() => {
-      void events.prune();
-      void sessions.pruneExpired();
+      events.prune();
+      sessions.pruneExpired();
     }, HOUSEKEEPING_INTERVAL_MS),
   };
 }
 
-await migrate();
+migrate();
 
 const { manager, live } = (store.__controlPlane ??= createControlPlane());
 
-manager.onChange = () => void live.push();
+manager.onChange = () => live.push();
 await manager.start();
 
 const server = Bun.serve({

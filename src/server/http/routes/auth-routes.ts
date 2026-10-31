@@ -52,8 +52,8 @@ export function authRoutes() {
     if (!isAdmin(identity)) return failure("this account is not an administrator.");
 
     const actor = actorFor(identity);
-    const session = await createSession(actor);
-    await audit.record(actor, "session.login");
+    const session = createSession(actor);
+    audit.record(actor, "session.login");
 
     return redirect("/", [sessionCookie(session.id), transaction.endCookie()]);
   };

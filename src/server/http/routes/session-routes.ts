@@ -8,15 +8,15 @@ import { ok, unauthorized } from "../responses.ts";
 import { currentSession, expiredCookie, signOut } from "../session.ts";
 
 export function sessionRoutes() {
-  const whoami = async (req: BunRequest): Promise<Response> => {
-    const session = await currentSession(req);
+  const whoami = (req: BunRequest): Response => {
+    const session = currentSession(req);
     return session ? ok({ actor: session.actor }) : unauthorized();
   };
 
   const destroy = async (req: BunRequest): Promise<Response> => {
-    const session = await currentSession(req);
-    await signOut(req);
-    if (session) await audit.record(session.actor, "session.logout");
+    const session = currentSession(req);
+    signOut(req);
+    if (session) audit.record(session.actor, "session.logout");
 
     // Offered, not followed: ending the provider session is the browser's job.
     const providerLogout = await endSessionUrl().catch(() => null);

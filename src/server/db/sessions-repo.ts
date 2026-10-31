@@ -1,23 +1,29 @@
-/** Admin session storage. Kept in Postgres so a deploy does not log the admin out. */
+/** Admin session storage. Kept in the database so a deploy does not log the admin out. */
 
-import { sql } from "./client.ts";
+import { db, NOW } from "./client.ts";
 
 export type SessionRecord = { id: string; actor: string };
 
-export async function create(id: string, actor: string, expiresAt: Date): Promise<void> {
-  await sql`INSERT INTO sessions (id, actor, expires_at) VALUES (${id}, ${actor}, ${expiresAt})`;
+export function create(id: string, actor: string, expiresAt: Date): void {
+  db.query("INSERT INTO sessions (id, actor, expires_at) VALUES ($id, $actor, $expiresAt)").run({
+    id,
+    actor,
+    expiresAt: expiresAt.toISOString(),
+  });
 }
 
-export async function findValid(id: string): Promise<SessionRecord | null> {
-  const [row]: SessionRecord[] =
-    await sql`SELECT id, actor FROM sessions WHERE id = ${id} AND expires_at > now()`;
-  return row ?? null;
+export function findValid(id: string): SessionRecord | null {
+  return db
+    .query<SessionRecord, { id: string }>(
+      `SELECT id, actor FROM sessions WHERE id = $id AND expires_at > ${NOW}`,
+    )
+    .get({ id });
 }
 
-export async function remove(id: string): Promise<void> {
-  await sql`DELETE FROM sessions WHERE id = ${id}`;
+export function remove(id: string): void {
+  db.query("DELETE FROM sessions WHERE id = $id").run({ id });
 }
 
-export async function pruneExpired(): Promise<void> {
-  await sql`DELETE FROM sessions WHERE expires_at <= now()`;
+export function pruneExpired(): void {
+  db.query(`DELETE FROM sessions WHERE expires_at <= ${NOW}`).run();
 }
