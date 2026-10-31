@@ -5,7 +5,7 @@ import { actorFor, isAdmin } from "../../auth/admin-access.ts";
 import * as transaction from "../../auth/login-transaction.ts";
 import { authorizationUrl, exchangeCode } from "../../auth/oidc-client.ts";
 import { createChallenge } from "../../auth/pkce.ts";
-import * as audit from "../../db/audit.repo.ts";
+import * as audit from "../../db/audit-repo.ts";
 import { createSession, sessionCookie } from "../session.ts";
 
 const redirect = (location: string, cookies: string[]): Response => {

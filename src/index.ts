@@ -5,14 +5,14 @@
 
 import { BotManager } from "./server/bots/manager.ts";
 import { config } from "./server/config.ts";
-import * as events from "./server/db/events.repo.ts";
+import * as events from "./server/db/events-repo.ts";
 import { migrate } from "./server/db/migrate.ts";
-import * as sessions from "./server/db/sessions.repo.ts";
+import * as sessions from "./server/db/sessions-repo.ts";
 import { LiveChannel } from "./server/http/live.ts";
-import { authRoutes } from "./server/http/routes/auth.routes.ts";
-import { botRoutes } from "./server/http/routes/bot.routes.ts";
-import { sessionRoutes } from "./server/http/routes/session.routes.ts";
-import { webhookRoutes } from "./server/http/routes/webhook.routes.ts";
+import { authRoutes } from "./server/http/routes/auth-routes.ts";
+import { botRoutes } from "./server/http/routes/bot-routes.ts";
+import { sessionRoutes } from "./server/http/routes/session-routes.ts";
+import { webhookRoutes } from "./server/http/routes/webhook-routes.ts";
 import dashboard from "./index.html";
 
 const HOUSEKEEPING_INTERVAL_MS = 60 * 60 * 1000;

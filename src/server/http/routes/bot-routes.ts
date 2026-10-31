@@ -5,13 +5,13 @@ import type { BotManager } from "../../bots/manager.ts";
 import type { BotMode } from "../../bots/types.ts";
 import { config } from "../../config.ts";
 import { encryptToken, randomSecret } from "../../crypto.ts";
-import * as audit from "../../db/audit.repo.ts";
-import * as bots from "../../db/bots.repo.ts";
-import * as events from "../../db/events.repo.ts";
+import * as audit from "../../db/audit-repo.ts";
+import * as bots from "../../db/bots-repo.ts";
+import * as events from "../../db/events-repo.ts";
 import * as telegram from "../../telegram/gateway.ts";
 import { badRequest, created, noContent, notFound, ok } from "../responses.ts";
 import { authenticated } from "../session.ts";
-import { needsRestart, parseCreate, parseUpdate } from "./bot.input.ts";
+import { needsRestart, parseCreate, parseUpdate } from "./bot-input.ts";
 
 async function readJson(req: Request): Promise<unknown> {
   return await req.json().catch(() => null);

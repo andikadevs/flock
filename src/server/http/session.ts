@@ -6,7 +6,7 @@
 import type { BunRequest } from "bun";
 import { config } from "../config.ts";
 import { randomSecret } from "../crypto.ts";
-import * as sessions from "../db/sessions.repo.ts";
+import * as sessions from "../db/sessions-repo.ts";
 import { unauthorized } from "./responses.ts";
 
 const COOKIE_NAME = "session";

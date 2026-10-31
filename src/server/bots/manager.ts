@@ -7,8 +7,8 @@
 import type { Update } from "grammy/types";
 import { webhookUrl } from "../config.ts";
 import { decryptToken, safeEqual } from "../crypto.ts";
-import * as bots from "../db/bots.repo.ts";
-import * as events from "../db/events.repo.ts";
+import * as bots from "../db/bots-repo.ts";
+import * as events from "../db/events-repo.ts";
 import * as telegram from "../telegram/gateway.ts";
 import { BotProcess } from "./bot-process.ts";
 import { HEARTBEAT_TIMEOUT_MS } from "./ipc.ts";
