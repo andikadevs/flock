@@ -7,6 +7,8 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-31
+
 ### Added
 
 - Dashboard to add, enable, disable and delete Telegram bots, with live status, uptime,
@@ -22,3 +24,6 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `chat-id` bot type: replies with the chat's ID and announces a group's ID when added.
 - `photo-log` bot type: logs a link to every photo posted in a group and lists them by day.
 - A private data folder per bot (`BOT_DATA_DIR`), removed when the bot is deleted.
+
+[Unreleased]: https://github.com/andikadevs/flock/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/andikadevs/flock/releases/tag/v0.1.0

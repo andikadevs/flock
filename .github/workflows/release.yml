@@ -20,6 +20,7 @@ jobs:
           awk -v v="$version" '
             $0 ~ "^## \\[" v "\\]" { found = 1; next }
             found && /^## \[/ { exit }
+            found && /^\[[^]]+\]: / { exit }
             found { print }
           ' CHANGELOG.md > release-notes.md
           test -s release-notes.md || { echo "No CHANGELOG entry for $version" >&2; exit 1; }
