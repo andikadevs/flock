@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 import { beforeAll, expect, test } from "bun:test";
 import * as bots from "./bots-repo.ts";
 import * as events from "./events-repo.ts";

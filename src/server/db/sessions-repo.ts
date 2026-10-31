@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /** Admin session storage. Kept in the database so a deploy does not log the admin out. */
 
 import { db, NOW } from "./client.ts";

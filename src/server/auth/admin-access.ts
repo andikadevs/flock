@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /**
  * Authorization. Authenticating with the identity provider proves who someone is;
  * this decides whether that person may administer bots.

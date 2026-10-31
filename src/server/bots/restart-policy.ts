@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /**
  * Decides whether a crashed bot is retried and how long to wait. Pure bookkeeping,
  * deliberately separate from the manager so the rule is readable and testable.

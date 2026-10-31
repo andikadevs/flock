@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /** Schema definition. Idempotent, so it can run on every boot. */
 
 import { db, NOW } from "./client.ts";

@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 import { CircleAlertIcon, InfoIcon, TriangleAlertIcon } from "lucide-react";
 import { Skeleton } from "@/frontend/components/ui/skeleton.tsx";
 import { formatTimestamp } from "@/frontend/lib/format.ts";

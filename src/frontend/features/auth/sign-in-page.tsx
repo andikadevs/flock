@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 import { LogInIcon } from "lucide-react";
 import { FlockLogo } from "@/frontend/components/flock-logo.tsx";
 import { buttonVariants } from "@/frontend/components/ui/button.tsx";

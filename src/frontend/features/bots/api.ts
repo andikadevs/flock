@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 import type { BotMode, BotView } from "@/server/bots/types.ts";
 import { jsonBody, request } from "@/frontend/lib/http.ts";
 

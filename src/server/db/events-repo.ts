@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /** Per-bot lifecycle and error log. Bounded, because nobody reads the 10,000th line. */
 
 import { db } from "./client.ts";

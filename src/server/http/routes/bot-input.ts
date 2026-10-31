@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /** Validation of bot payloads. Routes stay free of shape checking. */
 
 import { isHandlerKey } from "../../bots/handlers/index.ts";

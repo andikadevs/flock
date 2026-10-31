@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /** What every bot module must export. Kept separate so bots never import the registry. */
 
 import type { Bot } from "grammy";

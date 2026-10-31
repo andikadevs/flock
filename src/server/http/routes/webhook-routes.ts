@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /**
  * Telegram's delivery endpoint. It authenticates with the per-bot secret rather than
  * an admin session, and answers immediately: a slow reply makes Telegram retry and

@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /** Core vocabulary of the bot domain. Shared by the database, manager and dashboard. */
 
 export type BotMode = "webhook" | "polling";

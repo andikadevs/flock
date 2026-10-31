@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 import { useState } from "react";
 import { MoreHorizontalIcon, ScrollTextIcon, Trash2Icon } from "lucide-react";
 import { Button } from "@/frontend/components/ui/button.tsx";

@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /** Small display helpers shared by the dashboard components. */
 
 export function formatDuration(ms: number | null): string {

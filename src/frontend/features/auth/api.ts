@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 import { request } from "@/frontend/lib/http.ts";
 
 export type SignInOptions = { providerName: string };

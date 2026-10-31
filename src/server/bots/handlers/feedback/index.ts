@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 import { privateChatsOnly } from "../shared/guards.ts";
 import type { Handler } from "../types.ts";
 import { expectMessageFrom, takeExpectation } from "./inbox.ts";

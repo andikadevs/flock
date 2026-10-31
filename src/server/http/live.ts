@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /**
  * Live dashboard feed. Runtime state changes are pushed immediately; metrics that
  * only arrive with the next heartbeat are picked up by a slow tick.

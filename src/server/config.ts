@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /**
  * Environment configuration for the control plane (parent process only).
  * Bot runner processes receive everything they need over IPC and never read env.

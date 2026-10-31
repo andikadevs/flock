@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 import { expect, test } from "bun:test";
 import { isAdmin } from "./admin-access.ts";
 

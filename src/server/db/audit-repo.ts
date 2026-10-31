@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /** Who changed what. Written on every administrative action, never on bot traffic. */
 
 import { db } from "./client.ts";

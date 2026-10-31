@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /**
  * Bot tokens are stored encrypted at rest. A leaked database dump alone must not
  * hand an attacker control of every bot.

@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /**
  * Keeps the bot list live. The initial state comes from the API; every later change
  * arrives over the WebSocket feed, which also carries metrics between renders.

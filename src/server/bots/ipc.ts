@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /** The complete message contract between the manager and a bot runner process. */
 
 import type { Update } from "grammy/types";

@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /** All reads and writes of the `bots` table. Nothing else knows its column names. */
 
 import type { BotMode, BotRecord, BotStatus } from "../bots/types.ts";

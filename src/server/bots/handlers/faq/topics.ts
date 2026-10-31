@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /** This bot's own content. Nothing outside the faq folder reads it. */
 
 export type Topic = { id: string; label: string; answer: string };

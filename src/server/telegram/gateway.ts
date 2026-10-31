@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /**
  * Every call to Telegram's Bot API that the control plane makes itself. Bot traffic
  * belongs to the runner processes; this is only about registration and validation.

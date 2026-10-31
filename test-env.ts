@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /** Fixed environment for `bun test`, so results never depend on a developer's .env. */
 
 Object.assign(process.env, {

@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /** The single SQLite connection, via Bun's built-in driver. */
 
 import { Database } from "bun:sqlite";

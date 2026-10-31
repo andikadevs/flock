@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 import { LogOutIcon } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/frontend/components/ui/avatar.tsx";
 import { Button } from "@/frontend/components/ui/button.tsx";

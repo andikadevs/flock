@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import { revealFrom } from "./reveal-transition.ts";
 import { applyTheme, currentTheme, type Theme } from "./theme.ts";

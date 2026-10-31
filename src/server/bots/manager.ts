@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /**
  * The manager owns one invariant: `bots.enabled` is the desired state, the process
  * table is the actual state, and `reconcile()` is the only thing that closes the gap.

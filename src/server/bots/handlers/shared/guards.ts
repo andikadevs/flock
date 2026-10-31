@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /**
  * The shared library is deliberately small: only middleware that several bots need
  * verbatim. Anything specific to one bot belongs in that bot's own folder.

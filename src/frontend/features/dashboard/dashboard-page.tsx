@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 import { useState } from "react";
 import { CircleAlertIcon } from "lucide-react";
 import type { BotView } from "@/server/bots/types.ts";

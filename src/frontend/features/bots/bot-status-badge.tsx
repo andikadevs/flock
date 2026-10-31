@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 import type { BotStatus } from "@/server/bots/types.ts";
 import { Badge } from "@/frontend/components/ui/badge.tsx";
 import { cn } from "@/frontend/lib/utils.ts";

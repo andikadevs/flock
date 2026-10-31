@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /**
  * The registry: the one place that knows every bot type. Bots are chosen by key
  * from the dashboard, so the database stores a name, never anything executable.

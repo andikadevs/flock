@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /**
  * Isolation is a rule about the code, not just about processes: one bot must never
  * reach into another bot's folder. Shared behaviour goes through `shared/`.

@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /** Administrative CRUD over bots. Every route is session-authenticated. */
 
 import { catalog } from "../../bots/handlers/index.ts";

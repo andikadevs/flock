@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /**
  * The short-lived state carried across the redirect to the identity provider.
  * It lives in an HttpOnly cookie rather than the database: it is worthless after

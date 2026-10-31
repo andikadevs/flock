@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 import { Label } from "@/frontend/components/ui/label.tsx";
 import { Switch } from "@/frontend/components/ui/switch.tsx";
 

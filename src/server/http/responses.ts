@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /** Uniform JSON responses, so route handlers never hand-roll status codes. */
 
 export const ok = <T>(data: T): Response => Response.json(data);

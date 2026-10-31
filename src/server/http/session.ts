@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /**
  * Dashboard sessions. Identity comes from the OIDC provider; this module only issues,
  * reads and revokes the cookie that represents an already-authorized admin.

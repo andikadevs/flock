@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /** What the dashboard needs to know about the current admin, and how to sign out. */
 
 import type { BunRequest } from "bun";

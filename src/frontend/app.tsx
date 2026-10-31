@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 import { Toaster } from "@/frontend/components/ui/sonner.tsx";
 import { SignInPage } from "@/frontend/features/auth/sign-in-page.tsx";
 import { useSession } from "@/frontend/features/auth/use-session.ts";

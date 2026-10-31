@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /**
  * Light or dark, chosen by the user and remembered; the OS preference is only the default.
  * index.html applies the same rule inline before first paint, so there is no flash.

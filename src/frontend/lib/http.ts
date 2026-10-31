@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /** The only place fetch is called. Feature api modules describe endpoints on top of it. */
 
 export class UnauthorizedError extends Error {}

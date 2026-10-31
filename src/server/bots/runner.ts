@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /**
  * Entry point of a bot runner process: one grammy instance, one bot, nothing else.
  * It talks to the manager only over IPC, so a crash or a wedged handler here cannot

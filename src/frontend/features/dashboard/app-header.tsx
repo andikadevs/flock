@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 import { FlockLogo } from "@/frontend/components/flock-logo.tsx";
 import { ThemeToggle } from "@/frontend/features/theme/theme-toggle.tsx";
 import { UserMenu } from "./user-menu.tsx";

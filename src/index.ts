@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /**
  * Composition root: wire the database, the bot manager, the live feed and the HTTP
  * surface together, then serve. All policy lives in the modules this file imports.

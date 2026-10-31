@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /**
  * Supervises exactly one runner process: spawn it, feed it updates, shut it down.
  * It holds no policy and touches no database — those belong to the manager.

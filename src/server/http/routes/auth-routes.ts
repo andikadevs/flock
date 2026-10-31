@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: MIT
 /** The OIDC redirect dance: start at /auth/login, come back at /auth/callback. */
 
 import type { BunRequest } from "bun";
