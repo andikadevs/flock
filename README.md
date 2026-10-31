@@ -1,7 +1,11 @@
-# Telegram Bot Manager
+<p align="center">
+  <img src="src/frontend/assets/flock-logo.svg" width="96" alt="Flock logo">
+</p>
 
-A control plane for running several Telegram bots from one dashboard: add a bot,
-pick its behaviour, switch it on or off, and watch what it is doing.
+# Flock
+
+Run a flock of Telegram bots from one dashboard: add a bot, pick its behaviour,
+switch it on or off, and watch what it is doing.
 
 ## How it works
 
@@ -32,7 +36,7 @@ bun dev
 ```
 
 No database server is needed. State lives in a single SQLite file
-(`data/telegram-manager.sqlite` by default), created with its tables on first boot.
+(`data/flock.sqlite` by default), created with its tables on first boot.
 
 | Command | What it does |
 | --- | --- |
@@ -45,7 +49,7 @@ No database server is needed. State lives in a single SQLite file
 
 | Variable | Purpose |
 | --- | --- |
-| `DATABASE_PATH` | SQLite file path. Defaults to `data/telegram-manager.sqlite`. |
+| `DATABASE_PATH` | SQLite file path. Defaults to `data/flock.sqlite`. |
 | `APP_URL` | Where a browser reaches the dashboard. Builds the OIDC redirect URI. |
 | `PUBLIC_URL` | Public HTTPS origin Telegram can reach. Required only for webhook-mode bots. |
 | `TOKEN_ENCRYPTION_KEY` | 64 hex characters. Bot tokens are encrypted at rest with it. |
@@ -80,7 +84,7 @@ is running, use SQLite's online backup rather than copying the file, since recen
 writes may still sit in the `-wal` sidecar:
 
 ```bash
-sqlite3 data/telegram-manager.sqlite ".backup backup.sqlite"
+sqlite3 data/flock.sqlite ".backup backup.sqlite"
 ```
 
 Bot tokens are encrypted with `TOKEN_ENCRYPTION_KEY` before they are stored, so a

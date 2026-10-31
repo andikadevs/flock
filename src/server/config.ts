@@ -32,7 +32,7 @@ const appUrl = (process.env.APP_URL ?? "http://localhost:3000").replace(/\/+$/, 
 
 export const config = {
   /** SQLite file, created on first boot. `:memory:` keeps everything in RAM (tests). */
-  databasePath: process.env.DATABASE_PATH || "data/telegram-manager.sqlite",
+  databasePath: process.env.DATABASE_PATH || "data/flock.sqlite",
   port: Number(process.env.PORT ?? 3000),
 
   /** Where a browser reaches this dashboard. Used to build the OIDC redirect URI. */

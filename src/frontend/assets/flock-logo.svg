@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="Flock">
+  <defs>
+    <linearGradient id="flock-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#37BBFE"/>
+      <stop offset="1" stop-color="#1D93D2"/>
+    </linearGradient>
+    <!-- One gull: wing tips up, body at the low point. Centred on the origin. -->
+    <path id="flock-bird" d="M-6.5 -1.2C-4.2 -3 -1.6 -1.8 0 1.2C1.6 -1.8 4.2 -3 6.5 -1.2"/>
+  </defs>
+  <circle cx="24" cy="24" r="24" fill="url(#flock-sky)"/>
+  <!-- Three birds, shrinking with distance. Stroke widths undo each scale so the
+       drawn lines stay an even, slightly tapering weight. -->
+  <g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
+    <use href="#flock-bird" transform="translate(27.5 17) scale(1.25)" stroke-width="2.2"/>
+    <use href="#flock-bird" transform="translate(16.5 25)" stroke-width="2.7"/>
+    <use href="#flock-bird" transform="translate(25.5 32) scale(0.8)" stroke-width="3.1"/>
+  </g>
+</svg>

@@ -1,5 +1,5 @@
 import { LogInIcon } from "lucide-react";
-import { TelegramLogo } from "@/frontend/components/telegram-logo.tsx";
+import { FlockLogo } from "@/frontend/components/flock-logo.tsx";
 import { buttonVariants } from "@/frontend/components/ui/button.tsx";
 import {
   Card,
@@ -21,9 +21,9 @@ export function SignInPage() {
       </div>
       <Card className="w-full max-w-sm">
         <CardHeader className="items-center text-center">
-          <TelegramLogo className="mx-auto mb-2 size-12" />
-          <CardTitle className="text-lg">Telegram Bot Manager</CardTitle>
-          <CardDescription>Sign in with your organisation account to manage bots.</CardDescription>
+          <FlockLogo className="mx-auto mb-2 size-12" />
+          <CardTitle className="text-lg">Flock</CardTitle>
+          <CardDescription>Run your Telegram bots from one place. Sign in to continue.</CardDescription>
         </CardHeader>
         <CardContent>
           <a href="/auth/login" className={buttonVariants({ className: "w-full" })}>
