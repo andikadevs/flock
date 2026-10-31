@@ -5,6 +5,8 @@
  * Bot runner processes receive everything they need over IPC and never read env.
  */
 
+import { join } from "node:path";
+
 function required(key: string): string {
   const value = process.env[key];
   if (!value) {
@@ -35,6 +37,8 @@ const appUrl = (process.env.APP_URL ?? "http://localhost:3000").replace(/\/+$/, 
 export const config = {
   /** SQLite file, created on first boot. `:memory:` keeps everything in RAM (tests). */
   databasePath: process.env.DATABASE_PATH || "data/flock.sqlite",
+  /** Parent folder for files that individual bots keep, one subfolder per bot. */
+  botDataDir: process.env.BOT_DATA_DIR || "data/bots",
   port: Number(process.env.PORT ?? 3000),
 
   /** Where a browser reaches this dashboard. Used to build the OIDC redirect URI. */
@@ -70,6 +74,11 @@ export function webhookUrl(botId: string): string {
     );
   }
   return `${config.publicUrl}/tg/${botId}`;
+}
+
+/** The folder a bot may write its own files to. Deleted together with the bot. */
+export function botDataDir(botId: string): string {
+  return join(config.botDataDir, botId);
 }
 
 export function assertOidcConfigured(): void {

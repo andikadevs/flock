@@ -21,6 +21,8 @@ import { emptyMetrics, type BotMode } from "./types.ts";
 
 const INIT_TIMEOUT_MS = 15_000;
 
+type InitMessage = Extract<ParentMessage, { type: "init" }>;
+
 const metrics = emptyMetrics();
 let bot: Bot | null = null;
 let heartbeat: ReturnType<typeof setInterval> | null = null;
@@ -44,7 +46,7 @@ function abort(message: string): void {
   void stop(1);
 }
 
-function build(token: string, handlerKey: string): Bot | null {
+function build({ token, handlerKey, dataDir }: InitMessage): Bot | null {
   const handler = handlers[handlerKey];
   if (!handler) {
     abort(`Unknown handler "${handlerKey}".`);
@@ -59,7 +61,7 @@ function build(token: string, handlerKey: string): Bot | null {
     return next();
   });
 
-  handler.register(instance);
+  handler.register(instance, { dataDir });
 
   instance.catch(err => {
     recordError(err.message);
@@ -87,8 +89,8 @@ async function connect(instance: Bot, mode: BotMode): Promise<void> {
     .catch((err: Error) => abort(`Polling stopped: ${err.message}`));
 }
 
-async function start(init: Extract<ParentMessage, { type: "init" }>): Promise<void> {
-  const instance = build(init.token, init.handlerKey);
+async function start(init: InitMessage): Promise<void> {
+  const instance = build(init);
   if (!instance) return;
 
   try {

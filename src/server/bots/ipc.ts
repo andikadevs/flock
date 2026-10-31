@@ -6,7 +6,7 @@ import type { Update } from "grammy/types";
 import type { BotMetrics, BotMode } from "./types.ts";
 
 export type ParentMessage =
-  | { type: "init"; token: string; handlerKey: string; mode: BotMode }
+  | { type: "init"; token: string; handlerKey: string; mode: BotMode; dataDir: string }
   | { type: "update"; update: Update }
   | { type: "ping" }
   | { type: "shutdown" };

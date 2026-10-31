@@ -19,6 +19,7 @@ export type BotProcessSpec = {
   handlerKey: string;
   mode: BotMode;
   webhookSecret: string;
+  dataDir: string;
 };
 
 export type BotProcessListener = {
@@ -59,6 +60,7 @@ export class BotProcess {
       token: spec.token,
       handlerKey: spec.handlerKey,
       mode: spec.mode,
+      dataDir: spec.dataDir,
     });
 
     // Tells the runner the manager is still here; without it the runner exits.

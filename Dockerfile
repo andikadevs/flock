@@ -14,7 +14,8 @@ LABEL org.opencontainers.image.title="flock" \
       org.opencontainers.image.authors="Andika Dwi Saputra <hello@andikadevs.space>" \
       org.opencontainers.image.licenses="MIT"
 ENV NODE_ENV=production \
-    DATABASE_PATH=/app/data/flock.sqlite
+    DATABASE_PATH=/app/data/flock.sqlite \
+    BOT_DATA_DIR=/app/data/bots
 COPY --from=deps /app/node_modules ./node_modules
 COPY package.json bun.lock tsconfig.json bunfig.toml ./
 COPY src ./src

@@ -7,7 +7,7 @@
  */
 
 import type { Update } from "grammy/types";
-import { webhookUrl } from "../config.ts";
+import { botDataDir, webhookUrl } from "../config.ts";
 import { decryptToken, safeEqual } from "../crypto.ts";
 import * as bots from "../db/bots-repo.ts";
 import * as events from "../db/events-repo.ts";
@@ -132,6 +132,7 @@ export class BotManager {
           handlerKey: record.handlerKey,
           mode: record.mode,
           webhookSecret: record.webhookSecret,
+          dataDir: botDataDir(record.id),
         },
         {
           onReady: username => this.onReady(record.id, username),

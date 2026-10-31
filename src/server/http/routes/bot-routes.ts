@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: MIT
 /** Administrative CRUD over bots. Every route is session-authenticated. */
 
+import { rm } from "node:fs/promises";
 import { catalog } from "../../bots/handlers/index.ts";
 import type { BotManager } from "../../bots/manager.ts";
 import type { BotMode } from "../../bots/types.ts";
-import { config } from "../../config.ts";
+import { botDataDir, config } from "../../config.ts";
 import { encryptToken, randomSecret } from "../../crypto.ts";
 import * as audit from "../../db/audit-repo.ts";
 import * as bots from "../../db/bots-repo.ts";
@@ -102,6 +103,7 @@ export function botRoutes(manager: BotManager) {
     bots.setEnabled(id, false);
     await manager.reconcile();
     bots.remove(id);
+    await rm(botDataDir(id), { recursive: true, force: true });
     audit.record(session.actor, "bot.delete", id);
     return noContent();
   });

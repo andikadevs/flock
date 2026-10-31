@@ -4,10 +4,16 @@
 
 import type { Bot } from "grammy";
 
+/** What the runner knows about the one bot it hosts. */
+export type HandlerRuntime = {
+  /** A folder private to this bot, for handlers that keep their own files. */
+  dataDir: string;
+};
+
 export type Handler = {
   /** Shown in the dashboard's handler picker. */
   label: string;
   description: string;
   /** Attach this bot's behaviour to a fresh grammy instance. */
-  register: (bot: Bot) => void;
+  register: (bot: Bot, runtime: HandlerRuntime) => void;
 };
