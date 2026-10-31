@@ -2,8 +2,8 @@
 
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { App } from "./frontend/App.tsx";
-import "./index.css";
+import { App } from "./app.tsx";
+import "../index.css";
 
 const container = document.getElementById("root")!;
 

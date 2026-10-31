@@ -1,20 +1,113 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-@theme {
-  --color-canvas: oklch(0.985 0 0);
-  --color-surface: oklch(1 0 0);
-  --color-line: oklch(0.922 0 0);
-  --color-ink: oklch(0.269 0 0);
-  --color-ink-muted: oklch(0.556 0 0);
-  --color-accent: oklch(0.55 0.18 258);
+@custom-variant dark (&:is(.dark *));
+
+/* Base UI marks orientation with data-orientation; shadcn components style it by name. */
+@custom-variant data-horizontal (&[data-orientation="horizontal"]);
+@custom-variant data-vertical (&[data-orientation="vertical"]);
+
+/* Light: Telegram blue on a cool, faintly blue frame with white panels. */
+:root {
+  --radius: 0.75rem;
+  --background: #f0f4f8;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #2481cc;
+  --primary-foreground: #ffffff;
+  --secondary: #e8f0f8;
+  --secondary-foreground: #0f172a;
+  --muted: #f0f4f8;
+  --muted-foreground: #6b7c8f;
+  --accent: #e3f0fb;
+  --accent-foreground: #1c5d99;
+  --destructive: #e53935;
+  --success: #31a24c;
+  --warning: #d97706;
+  --info: #2481cc;
+  --border: #e1e8ef;
+  --input: #cfdae6;
+  --ring: #2aabee;
+  /* Soft UI: surfaces separate by elevation, not borders. */
+  --elevation-soft: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.12);
+  --elevation-float: 0 2px 6px rgb(15 23 42 / 0.05), 0 20px 40px -16px rgb(15 23 42 / 0.22);
+  color-scheme: light;
+}
+
+/* Dark: Telegram "Night Blue" surfaces, Telegram blue accent, One Monokai status colours. */
+.dark {
+  --background: #0e1621;
+  --foreground: #f5f5f5;
+  --card: #17212b;
+  --card-foreground: #f5f5f5;
+  --popover: #1e2a36;
+  --popover-foreground: #f5f5f5;
+  --primary: #2ea6ff;
+  --primary-foreground: #0b1520;
+  --secondary: #242f3d;
+  --secondary-foreground: #f5f5f5;
+  --muted: #1e2a36;
+  --muted-foreground: #7f91a4;
+  --accent: #2b5278;
+  --accent-foreground: #ffffff;
+  --destructive: #e06c75;
+  --success: #98c379;
+  --warning: #d19a66;
+  --info: #61afef;
+  --border: #24313f;
+  --input: #2f3e4e;
+  --ring: #2ea6ff;
+  --elevation-soft: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px -12px rgb(0 0 0 / 0.5);
+  --elevation-float: 0 2px 6px rgb(0 0 0 / 0.35), 0 24px 48px -16px rgb(0 0 0 / 0.65);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --shadow-soft: var(--elevation-soft);
+  --shadow-float: var(--elevation-float);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
 @layer base {
-  html {
-    color-scheme: light;
+  * {
+    @apply border-border outline-ring/50;
   }
 
   body {
-    @apply min-h-screen bg-canvas font-sans text-ink antialiased;
+    @apply bg-background font-sans text-foreground antialiased;
   }
+}
+
+/* The theme toggle reveals the new theme as a growing circle; no cross-fade underneath. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }

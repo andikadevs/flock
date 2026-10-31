@@ -1,7 +1,7 @@
 /** Tracks who is signed in, if anyone. */
 
 import { useCallback, useEffect, useState } from "react";
-import { api } from "./api.ts";
+import { authApi } from "./api.ts";
 
 export type SessionState =
   | { status: "loading" }
@@ -14,7 +14,7 @@ export function useSession() {
   useEffect(() => {
     let cancelled = false;
 
-    api
+    authApi
       .whoami()
       .then(({ actor }) => {
         if (!cancelled) setState({ status: "signed-in", actor });
@@ -29,7 +29,7 @@ export function useSession() {
   }, []);
 
   const signOut = useCallback(async () => {
-    const { providerLogoutUrl } = await api.signOut();
+    const { providerLogoutUrl } = await authApi.signOut();
     setState({ status: "anonymous" });
     if (providerLogoutUrl) window.location.href = providerLogoutUrl;
   }, []);
