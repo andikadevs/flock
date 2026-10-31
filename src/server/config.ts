@@ -49,6 +49,8 @@ export const config = {
     clientId: process.env.OIDC_CLIENT_ID ?? "",
     clientSecret: process.env.OIDC_CLIENT_SECRET ?? "",
     scope: process.env.OIDC_SCOPE ?? "openid email profile",
+    /** Shown on the sign-in button, e.g. "Google" or "Keycloak". */
+    providerName: process.env.OIDC_PROVIDER_NAME || "SSO",
     redirectUri: `${appUrl}/auth/callback`,
   },
 

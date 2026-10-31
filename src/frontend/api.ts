@@ -42,6 +42,8 @@ async function errorMessage(response: Response): Promise<string> {
 export const api = {
   whoami: () => request<{ actor: string }>("/api/session"),
 
+  signInOptions: () => request<{ providerName: string }>("/api/session/options"),
+
   signOut: () =>
     request<{ providerLogoutUrl: string | null }>("/api/session", { method: "DELETE" }),
 

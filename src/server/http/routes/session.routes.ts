@@ -2,6 +2,7 @@
 
 import type { BunRequest } from "bun";
 import { endSessionUrl } from "../../auth/oidc-client.ts";
+import { config } from "../../config.ts";
 import * as audit from "../../db/audit.repo.ts";
 import { ok, unauthorized } from "../responses.ts";
 import { currentSession, expiredCookie, signOut } from "../session.ts";
@@ -25,7 +26,11 @@ export function sessionRoutes() {
     );
   };
 
+  // Public: the sign-in page renders before anyone is authenticated.
+  const signInOptions = (): Response => ok({ providerName: config.oidc.providerName });
+
   return {
     "/api/session": { GET: whoami, DELETE: destroy },
+    "/api/session/options": { GET: signInOptions },
   };
 }

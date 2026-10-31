@@ -43,9 +43,27 @@ Tables are created on first boot.
 | `PUBLIC_URL` | Public HTTPS origin Telegram can reach. Required only for webhook-mode bots. |
 | `TOKEN_ENCRYPTION_KEY` | 64 hex characters. Bot tokens are encrypted at rest with it. |
 | `OIDC_ISSUER`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET` | Identity provider credentials. |
+| `OIDC_PROVIDER_NAME` | Label on the sign-in button. Defaults to `SSO`. |
 | `ADMIN_EMAILS`, `ADMIN_SUBJECTS` | Who may administer bots. Empty admits nobody. |
 
-Register `${APP_URL}/auth/callback` as the client's redirect URI.
+### Authentication
+
+Sign-in uses OpenID Connect (authorization code flow with PKCE), so any compliant
+provider works: Google, Keycloak, Authentik, Authelia, Zitadel, Pocket ID, Auth0 and so on.
+Create a confidential client, register `${APP_URL}/auth/callback` as its redirect URI,
+and copy the issuer URL, client ID and secret into `.env`.
+
+| Provider | `OIDC_ISSUER` |
+| --- | --- |
+| Google | `https://accounts.google.com` |
+| Keycloak | `https://<host>/realms/<realm>` |
+| Authentik | `https://<host>/application/o/<slug>/` |
+| Auth0 | `https://<tenant>.auth0.com/` |
+
+`ADMIN_EMAILS` only matches when the provider asserts `email_verified: true` in the ID
+token, so a self-registered account cannot claim an admin's address. Providers that never
+send that claim (Microsoft Entra ID, for example) should list admins in `ADMIN_SUBJECTS`
+instead, using the `sub` value the provider issues.
 
 ## Adding a bot type
 

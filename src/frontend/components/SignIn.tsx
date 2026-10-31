@@ -1,4 +1,16 @@
+import { useEffect, useState } from "react";
+import { api } from "../api.ts";
+
 export function SignIn() {
+  const [providerName, setProviderName] = useState("SSO");
+
+  useEffect(() => {
+    api
+      .signInOptions()
+      .then(options => setProviderName(options.providerName))
+      .catch(() => {});
+  }, []);
+
   return (
     <main className="flex min-h-screen items-center justify-center p-6">
       <div className="w-full max-w-sm text-center">
@@ -10,7 +22,7 @@ export function SignIn() {
           href="/auth/login"
           className="mt-8 inline-block w-full rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white transition hover:opacity-90"
         >
-          Continue with SSO
+          Continue with {providerName}
         </a>
       </div>
     </main>

@@ -18,6 +18,7 @@ type Discovery = {
 
 export type IdentityClaims = {
   sub: string;
+  /** Only an address the provider has verified; anything else is not an identity. */
   email: string | null;
   name: string | null;
 };
@@ -31,6 +32,7 @@ type IdTokenClaims = {
   nonce?: string;
   sub?: string;
   email?: string;
+  email_verified?: boolean;
   name?: string;
 };
 
@@ -101,7 +103,7 @@ function decodeIdToken(idToken: string): IdTokenClaims {
   return JSON.parse(Buffer.from(payload, "base64url").toString("utf8")) as IdTokenClaims;
 }
 
-function toIdentity(claims: IdTokenClaims, expectedNonce: string): IdentityClaims {
+export function toIdentity(claims: IdTokenClaims, expectedNonce: string): IdentityClaims {
   const audiences = Array.isArray(claims.aud) ? claims.aud : [claims.aud];
 
   if (claims.iss !== config.oidc.issuer) throw new Error("ID token issuer mismatch.");
@@ -112,7 +114,8 @@ function toIdentity(claims: IdTokenClaims, expectedNonce: string): IdentityClaim
 
   return {
     sub: claims.sub,
-    email: claims.email ?? null,
+    // Many providers let users type any address; an unverified one could impersonate an admin.
+    email: claims.email_verified === true ? (claims.email ?? null) : null,
     name: claims.name ?? null,
   };
 }
