@@ -1,21 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="Flock">
   <defs>
-    <linearGradient id="flock-sky" x1="0" y1="0" x2="0" y2="1">
+    <!-- userSpaceOnUse, so the cut-outs below match the disc behind them exactly. -->
+    <linearGradient id="flock-sky" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="48">
       <stop offset="0" stop-color="#37BBFE"/>
       <stop offset="1" stop-color="#1D93D2"/>
     </linearGradient>
-    <!-- One gull: wing tips up, body at the low point. Centred on the origin. -->
-    <path id="flock-bird" d="M-6.5 -1.2C-4.2 -3 -1.6 -1.8 0 1.2C1.6 -1.8 4.2 -3 6.5 -1.2"/>
   </defs>
   <circle cx="24" cy="24" r="24" fill="url(#flock-sky)"/>
-  <!-- The flight trail that ties the flock together. -->
-  <path d="M8 37Q20 34 22 27T36 17" fill="none" stroke="#fff" stroke-opacity=".5"
-        stroke-width="1.6" stroke-linecap="round" stroke-dasharray="0.1 3.2"/>
-  <!-- Three birds rising along it, smaller as they fly away. Stroke widths undo each
-       scale so the drawn lines keep an even weight. -->
-  <g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
-    <use href="#flock-bird" transform="translate(13.5 29) scale(1.05)" stroke-width="2.57"/>
-    <use href="#flock-bird" transform="translate(24 21.5) scale(0.95)" stroke-width="2.74"/>
-    <use href="#flock-bird" transform="translate(34 14.5) scale(0.8)" stroke-width="3"/>
+  <!-- Three gulls overlapping like roof tiles: each is drawn after the one below it,
+       with a sky-coloured outline, so its left wing tucks over that bird's right wing. -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8.03 28.62C10.67 26.55 13.66 27.93 15.5 31.38C17.34 27.93 20.33 26.55 22.98 28.62" stroke="url(#flock-sky)" stroke-width="5.4"/>
+    <path d="M8.03 28.62C10.67 26.55 13.66 27.93 15.5 31.38C17.34 27.93 20.33 26.55 22.98 28.62" stroke="#fff" stroke-width="2.8"/>
+    <path d="M16.52 22.62C19.17 20.55 22.16 21.93 24 25.38C25.84 21.93 28.83 20.55 31.48 22.62" stroke="url(#flock-sky)" stroke-width="5.4"/>
+    <path d="M16.52 22.62C19.17 20.55 22.16 21.93 24 25.38C25.84 21.93 28.83 20.55 31.48 22.62" stroke="#fff" stroke-width="2.8"/>
+    <path d="M25.02 16.62C27.67 14.55 30.66 15.93 32.5 19.38C34.34 15.93 37.33 14.55 39.98 16.62" stroke="url(#flock-sky)" stroke-width="5.4"/>
+    <path d="M25.02 16.62C27.67 14.55 30.66 15.93 32.5 19.38C34.34 15.93 37.33 14.55 39.98 16.62" stroke="#fff" stroke-width="2.8"/>
   </g>
 </svg>
