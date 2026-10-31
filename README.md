@@ -63,6 +63,7 @@ container runs as the unprivileged `bun` user.
 | Variable | Purpose |
 | --- | --- |
 | `DATABASE_PATH` | SQLite file path. Defaults to `data/flock.sqlite`. |
+| `BOT_DATA_DIR` | Files that individual bots keep, one subfolder per bot. Defaults to `data/bots`. |
 | `APP_URL` | Where a browser reaches the dashboard. Builds the OIDC redirect URI. |
 | `PUBLIC_URL` | Public HTTPS origin Telegram can reach. Required only for webhook-mode bots. |
 | `TOKEN_ENCRYPTION_KEY` | 64 hex characters. Bot tokens are encrypted at rest with it. |
@@ -134,6 +135,21 @@ The theme follows the OS preference until the user picks one with the toggle, an
 the choice is remembered. Light mode uses Telegram blue on a cool slate frame; dark
 mode uses Telegram's "Night Blue" palette.
 
+## Bot types
+
+| Key | What it does |
+| --- | --- |
+| `echo` | Replies with whatever text it receives. |
+| `ping` | Answers `/ping` with a timestamp. |
+| `faq` | Answers common questions from a button menu. |
+| `feedback` | Collects a written message, one at a time, from each person. |
+| `chat-id` | Replies to `/id` with the chat's ID, and posts a group's ID when it is added to one. |
+| `photo-log` | Keeps a link to every photo posted in a group; `/photos [YYYY-MM-DD]` lists them by day. |
+
+`photo-log` only sees photos if the bot is a group admin or its privacy mode is off
+(BotFather → `/setprivacy` → Disable). It can link to messages in supergroups and
+channels only, so photos in a basic group are skipped.
+
 ## Adding a bot type
 
 Bot behaviour lives in code, never in the database. Each bot type owns a folder
@@ -183,6 +199,10 @@ another, and if a folder is missing from the registry.
 
 Because each bot owns a process, plain module state (`feedback/inbox.ts`) is
 already private to that bot. No keying by bot id, no shared cache to reason about.
+
+State that must survive a restart goes in the folder the runner passes as
+`register(bot, { dataDir })`. Each bot gets its own folder under `BOT_DATA_DIR`,
+and deleting the bot deletes it. `photo-log` keeps its SQLite file there.
 
 ### Running the same behaviour twice
 

@@ -8,9 +8,11 @@
  * anything genuinely common lives in `shared/` and is imported explicitly.
  */
 
+import { handler as chatId } from "./chat-id/index.ts";
 import { handler as echo } from "./echo/index.ts";
 import { handler as faq } from "./faq/index.ts";
 import { handler as feedback } from "./feedback/index.ts";
+import { handler as photoLog } from "./photo-log/index.ts";
 import { handler as ping } from "./ping/index.ts";
 import type { Handler } from "./types.ts";
 
@@ -21,6 +23,8 @@ export const handlers: Record<string, Handler> = {
   ping,
   faq,
   feedback,
+  "chat-id": chatId,
+  "photo-log": photoLog,
 };
 
 export function isHandlerKey(key: string): boolean {

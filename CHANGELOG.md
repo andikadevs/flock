@@ -19,3 +19,6 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Light and dark themes, following the OS until the user picks one.
 - SQLite storage via `bun:sqlite`, with no database server to run.
 - Docker image and Compose file.
+- `chat-id` bot type: replies with the chat's ID and announces a group's ID when added.
+- `photo-log` bot type: logs a link to every photo posted in a group and lists them by day.
+- A private data folder per bot (`BOT_DATA_DIR`), removed when the bot is deleted.
